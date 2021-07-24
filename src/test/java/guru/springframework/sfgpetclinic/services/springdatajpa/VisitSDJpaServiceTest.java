@@ -19,6 +19,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
+
 @ExtendWith(MockitoExtension.class)
 class VisitSDJpaServiceTest {
 
@@ -31,17 +35,17 @@ class VisitSDJpaServiceTest {
     @DisplayName("Test Find All")
     @Test
     void findAll() {
+        //given
         Visit visit = new Visit();
-
         Set<Visit> visits = new HashSet<>();
         visits.add(visit);
+        given(visitRepository.findAll()).willReturn(visits);
 
-        when(visitRepository.findAll()).thenReturn(visits);
-
+        //when
         Set<Visit> foundVisits = service.findAll();
 
-        verify(visitRepository).findAll();
-
+        //then
+        then(visitRepository).should().findAll();
         assertThat(foundVisits).hasSize(1);
 
     }
@@ -49,26 +53,23 @@ class VisitSDJpaServiceTest {
     @Test
     void findById() {
         Visit visit = new Visit();
+        given(visitRepository.findById(anyLong())).willReturn(Optional.of(visit));
 
-        when(visitRepository.findById(anyLong())).thenReturn(Optional.of(visit));
 
         Visit foundVisit = service.findById(1L);
 
-        verify(visitRepository).findById(anyLong());
-
+        then(visitRepository).should().findById(anyLong());
         assertThat(foundVisit).isNotNull();
     }
 
     @Test
     void save() {
         Visit visit = new Visit();
-
-        when(visitRepository.save(any(Visit.class))).thenReturn(visit);
+        given(visitRepository.save(any(Visit.class))).willReturn(visit);
 
         Visit savedVisit = service.save(new Visit());
 
-        verify(visitRepository).save(any(Visit.class));
-
+        then(visitRepository).should().save(any(Visit.class));
         assertThat(savedVisit).isNotNull();
     }
 
@@ -78,7 +79,7 @@ class VisitSDJpaServiceTest {
 
         service.delete(visit);
 
-        verify(visitRepository).delete(any(Visit.class));
+        then(visitRepository).should().delete(any(Visit.class));
 
     }
 
@@ -87,6 +88,6 @@ class VisitSDJpaServiceTest {
 
         service.deleteById(1L);
 
-        verify(visitRepository).deleteById(anyLong());
+        then(visitRepository).should().deleteById(anyLong());
     }
 }
