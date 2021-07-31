@@ -26,6 +26,9 @@ public class OwnerControllerTest {
     @Mock
     OwnerService ownerService;
 
+    @Mock
+    Model model;
+
     @InjectMocks
     OwnerController controller;
 
